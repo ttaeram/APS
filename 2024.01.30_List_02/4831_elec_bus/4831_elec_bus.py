@@ -1,24 +1,28 @@
-# import sys
-# sys.stdin = open('4831_input.txt')
+import sys
+sys.stdin = open('4831_input.txt')
 
 T = int(input())
 
-def min_charging_stations(K, N, M, charging_stations):
-    charging_stations.sort()  # 충전기가 설치된 정류장을 정렬한다.
+def min_charging_stations(K, N, M, stations):
+    for i in range(M - 1, 0, -1):  # 정렬될 구간의 끝
+        for j in range(0, i):  # 비교할 원소 중 왼쪽 원소의 인덱스
+            if stations[j] > stations[j + 1]:  # 왼쪽 원소가 더 크면
+                stations[j], stations[j + 1] = stations[j + 1], stations[j]
 
+    print(stations)
     current_station = 0  # 현재 위치
     charge_count = 0  # 충전 횟수
 
-    for station in charging_stations:
-        distance_to_next_station = station - current_station
+    for num in range(M):
+        distance = stations[num] - current_station
 
-        if distance_to_next_station > K:
+        if distance > K:
             # 현재 위치에서 다음 충전기까지의 거리가 최대 이동 가능 거리보다 크면 충전이 필요하다.
             return 0
-
+        # if distance <= K:
         # 현재 충전기까지 갈 수 있으므로 계속 진행한다.
-        current_station = station
-        K -= distance_to_next_station  # 충전을 했으므로 최대 이동 가능 거리를 감소시킨다.
+        current_station = stations[num]
+        K -= distance   # 충전을 했으므로 최대 이동 가능 거리를 감소시킨다.
 
         # 종점에 도착했는지 확인
         if current_station + K >= N:
