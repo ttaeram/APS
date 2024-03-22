@@ -1,32 +1,34 @@
 import sys
-sys.stdin = open('5248_input.txt')
+sys.stdin = open('s_input.txt')
 
 def make_group(n):
     stack = [n]
     group = [n]
     while stack:
         num = stack.pop()
+        visit[num] = 1
         for i in relation[num]:
             if i in group:
                 continue
             group.append(i)
             stack.append(i)
-    group.sort()
-    if group not in groups:
-        groups.append(group)
+    groups.add(tuple(group))
     return
-
 
 T = int(input())
 for t in range(1, T + 1):
     N, M = map(int, input().split())
-    arr = list(map(int, input().split()))
     relation = [[] for _ in range(N + 1)]
-    for i in range(M):
-        relation[arr[2 * i]].append(arr[2 * i + 1])
-        relation[arr[2 * i + 1]].append(arr[2 * i])
-    groups = []
-    for m in range(1, N + 1):
-        make_group(m)
+    visit = [0] * (N + 1)
+    groups = set()
+    for _ in range(M):
+        a, b = map(int, input().split())
+        relation[a].append(b)
+        relation[b].append(a)
+
+    for i in range(1, N + 1):
+        if visit[i] == 0:
+            make_group(i)
+
     ans = len(groups)
     print(f'#{t} {ans}')
